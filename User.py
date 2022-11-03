@@ -30,6 +30,9 @@ class Users(db.Model):
     def json(self):
         return {"id": self.id, "first_name": self.first_name, "last_name": self.last_name, "email": self.email, "birthday": self.birthday, "status": self.status, "role": self.role}
 
+@app.route("/healthcheck")
+def healthcheck():
+    return 200
 
 @app.route("/users")
 def get_all():
