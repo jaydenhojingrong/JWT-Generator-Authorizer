@@ -19,7 +19,7 @@
     "memory": "512",
     "cpu": "256",
     "executionRoleArn": "arn:aws:iam::183201325337:role/ecsTaskExecutionRole",
-    "family": "first-run-task-definition",
+    "family": "banking-core",
     "taskRoleArn": "",
     "placementConstraints": []
 }
