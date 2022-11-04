@@ -1,5 +1,10 @@
+import ast
+import base64
+import json
+import time
 from flask import Flask, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
+import boto3
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:password@itsa-dev.cwp8u9nj29mg.ap-southeast-1.rds.amazonaws.com"
@@ -33,6 +38,48 @@ class Users(db.Model):
 @app.route("/")
 def healthcheck():
     return Response("200", status=200, mimetype='application/json')
+
+@app.route('/generate_token/<string:email>')
+def generate_token(email):
+
+    role =  str()
+    response = find_by_email(email)
+    role = (ast.literal_eval(response.data.decode('utf-8')))["data"]["role"]
+
+    iat = int(time.time() )
+    exp = (iat + (15 * 60))
+    kid = "0f00b1e6-10c0-457b-8544-6e1712c0adf3"
+
+    headers={
+        "alg": "RS256",
+        "typ": "JWT",
+        "kid": kid,
+        "iss": "https://g2t5.com"
+    }
+
+    payload = {
+        "email": email,
+        "iat": iat,
+        "exp": exp,
+        "aud": "https://g2t5.com",
+        "scope": "openid " + role
+    }
+
+    token_components = {
+        "headers":  base64.urlsafe_b64encode(json.dumps(headers).encode()).decode().rstrip("="),
+        "payload": base64.urlsafe_b64encode(json.dumps(payload, indent=4, sort_keys=True, default=str).encode()).decode().rstrip("="),
+    }
+    message = f'{token_components.get("headers")}.{token_components.get("payload")}'
+
+    kms_client = boto3.client("kms")
+    response = kms_client.sign(
+        KeyId=kid, 
+        Message=message.encode(), 
+        SigningAlgorithm="RSASSA_PKCS1_V1_5_SHA_256", 
+        MessageType="RAW"
+    )
+    token_components["signature"] = base64.urlsafe_b64encode(response["Signature"]).decode().rstrip("=")
+    return f'{token_components.get("headers")}.{token_components.get("payload")}.{token_components["signature"]}'
 
 @app.route("/users")
 def get_all():
