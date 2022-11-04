@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ class Users(db.Model):
 
 @app.route("/")
 def healthcheck():
-    return 200
+    return Response("200", status=200, mimetype='application/json')
 
 @app.route("/users")
 def get_all():
