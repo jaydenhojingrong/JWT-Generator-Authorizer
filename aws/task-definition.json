@@ -24,6 +24,6 @@
     "cpu": "256",
     "executionRoleArn": "arn:aws:iam::183201325337:role/ecsTaskExecutionRole",
     "family": "banking-core",
-    "taskRoleArn": "arn:aws:iam::183201325337:policy/ecs_users_access_kms_sign_key",
+    "taskRoleArn": "arn:aws:iam::183201325337:role/ecs_users_task_access_kms_sign",
     "placementConstraints": []
 }
