@@ -4,6 +4,7 @@ import json
 import time
 from flask import Flask, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS 
 import boto3
 
 app = Flask(__name__)
@@ -11,6 +12,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:password@itsa-dev
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+CORS(app)
 
 class Users(db.Model):
     __tablename__ = 'Users'
