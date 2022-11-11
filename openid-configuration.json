@@ -1,0 +1,6 @@
+[
+  {
+    "issuer":"https://g2t5.com",
+    "jwks_uri":"http://g2t5-openid-configuration.s3-website-ap-southeast-1.amazonaws.com/.well-known/jwks.json"
+  }
+]

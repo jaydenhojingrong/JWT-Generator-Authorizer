@@ -1,0 +1,12 @@
+{
+    "read": [
+        "GET:users"
+    ],
+    "write": [
+        "PUT:users/*",
+        "DELETE:users/*"
+    ],
+    "default": [
+        "GET:users/*"
+    ]
+}
